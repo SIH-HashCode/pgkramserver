@@ -3,6 +3,8 @@ import express from 'express';
 import cors from 'cors';
 
 import bodyParser from 'body-parser';
+
+import userRoutes from './router/user.js'
 app.use(bodyParser.json({limit: '30mb',extended:true}));
 
 const app = express();
@@ -14,6 +16,7 @@ const PORT = process.env.PORT|| 5000;
 
   
 
+app.use('/seeker',userRoutes);
 
 app.get('/', (req, res) => {
   res.status(200).json({

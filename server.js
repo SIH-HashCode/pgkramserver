@@ -7,11 +7,10 @@ import mongoose from 'mongoose';
 import userData from "./userData.js"; // Replace with the correct path to your userData file
 import JobsModel from './models/jobs.js'
 import SeekerModel from "./models/seeker.js";
+import userRoutes from './router/user.js'
 import { saveIndianEmployerData } from './contontrollers/dailyupdate.js';
 const app = express();
 const server = http.createServer(app);
-
-
 mongoose.connect("mongodb+srv://sih202227:sih202227@cluster0.bjhqbah.mongodb.net/?retryWrites=true&w=majority",{useNewUrlParser: true, useUnifiedTopology: true})
 
 
@@ -129,6 +128,16 @@ const userActivity = {}; // Map to track which user is on which component
 app.use(express.json());
 app.use(cors());
 
+app.use('/seeker',userRoutes)
+
+
+
+
+
+
+
+
+
 // Create a Socket.IO server attached to the HTTP server
 const io = new Server(server, {
   cors: {
@@ -139,9 +148,28 @@ const io = new Server(server, {
 
 // Function to update the dashboard with user activity
 const updateDashboard = () => {
-  io.emit('dashboard-update', userActivity);
-};
 
+
+  const nonloginuserLengths = Object.fromEntries(
+    Object.entries(nonloginuser).map(([key, value]) => [key, value.length])
+  );
+  const pageCountsLengths = Object.fromEntries(
+    Object.entries(pageCounts).map(([key, value]) => [key, value.length])
+  );
+
+  const deviceCountsLengths = Object.fromEntries(
+    Object.entries(DeviceCounts).map(([key, value]) => [key, value.length])
+  );
+
+  const dataToSend = {
+    nonloginuser: nonloginuserLengths,
+    loginuser:pageCountsLengths,
+    deviceCounts: deviceCountsLengths,
+    // Add other array lengths as needed
+  };
+console.log(dataToSend)
+  io.emit('dashboard-update', dataToSend);
+};
 io.on('connection', (socket) => {
   console.log('Client connected');
 

@@ -291,6 +291,5 @@ const educationLevels = [
   
   // Run the function to create random jobs
   createRandomJobs(educationLevels, skillsArray, interestsArray, coursesArray, cities);
-  
-  ;
+
   
