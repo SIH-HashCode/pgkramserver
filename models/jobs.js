@@ -13,6 +13,8 @@ const userSchema = mongoose.Schema({
   
   salarytype: { type: String, required:  true },
   
+  type: { type: String, required:  true },
+  
   salary: { type: String, required:  true },
   
   education: { type: String, required:  true },

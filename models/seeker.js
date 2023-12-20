@@ -8,7 +8,9 @@ const userSchema = mongoose.Schema({
   
   state: { type: String, required:  true },
   
-  location: { type: String, required:  true },
+  city: { type: String, required:  true },
+  
+  tehsil: { type: String, required:  true },
   
   sex: { type: String, required:  true },
   

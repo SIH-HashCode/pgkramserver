@@ -8,7 +8,11 @@ import userData from "./userData.js"; // Replace with the correct path to your u
 import JobsModel from './models/jobs.js'
 import SeekerModel from "./models/seeker.js";
 import userRoutes from './router/user.js'
+import loginRoutes from './router/login.js'
+import dashboardRoutes from './router/dashboard.js'
 import { saveIndianEmployerData } from './contontrollers/dailyupdate.js';
+import { createRandom } from './functions.js';
+import { getUsersByAgeCount, getUsersByCityWithTehsilCount, getUsersByCourseCount, getUsersByEducationCount, getUsersBySexCount } from './contontrollers/dashboard.js';
 const app = express();
 const server = http.createServer(app);
 mongoose.connect("mongodb+srv://sih202227:sih202227@cluster0.bjhqbah.mongodb.net/?retryWrites=true&w=majority",{useNewUrlParser: true, useUnifiedTopology: true})
@@ -130,6 +134,11 @@ app.use(cors());
 
 app.use('/seeker',userRoutes)
 
+app.use('/user',loginRoutes)
+
+app.use('/dashboard',dashboardRoutes)
+
+
 
 // Create a Socket.IO server attached to the HTTP server
 const io = new Server(server, {
@@ -164,7 +173,6 @@ console.log(dataToSend)
   io.emit('dashboard-update', dataToSend);
 };
 io.on('connection', (socket) => {
-  console.log('Client connected');
 
   socket.on('track-device', (data) => {
     
@@ -179,14 +187,12 @@ io.on('connection', (socket) => {
 
   // Handle user behavior events
   socket.on('user-behavior', (data) => {
-    console.log(data)
-console.log(DeviceCounts)
+  
     const { userId, currentPage, newPage } = data;
 if(data.login){
     
   
     
-    console.log(componentStats)
     if (currentPage !== newPage) {
       // If the current page and new page are different, update counts accordingly
       if (pageCounts[currentPage]) {
@@ -203,7 +209,6 @@ if(data.login){
       pageCounts[newPage].push(userId);
     }
 
-    console.log('Page Counts:', pageCounts);
 componentStats[newPage]=+1;
     // componentStats[newPage] = Math.max(componentStats[newPage], pageCounts[newPage].length);
     // Broadcast the updated page counts to all connected clients
@@ -230,7 +235,6 @@ componentStats[newPage]=+1;
       nonloginuser[newPage].push(userId);
     }
 
-    console.log('non loginuser', nonloginuser);
 componentStats[newPage]=+1;
     // componentStats[newPage] = Math.max(componentStats[newPage], pageCounts[newPage].length);
     // Broadcast the updated page counts to all connected clients
@@ -238,8 +242,8 @@ componentStats[newPage]=+1;
 
     // Update user activity
     userActivity[userId] = newPage;
-    console.log(userActivity)
   }
+  console.log("componentstts",componentStats)
   updateDashboard();
 }
   
@@ -271,11 +275,22 @@ console.log(DeviceCounts)
 
 
 
+
+
+
+
+
+setTimeout(() => {
+}, 5000);
+
+
+// createRandom()
+
+
 const twentyFourHoursInMilliseconds = 24*60*60*1000; 
 setInterval(() => {
   saveIndianEmployerData(componentStats)
 }, twentyFourHoursInMilliseconds);
-console.log(pageCounts)
 server.listen(5000, () => {
   console.log('Server is running on port 5000');
 });
