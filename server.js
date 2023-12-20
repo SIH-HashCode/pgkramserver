@@ -131,17 +131,10 @@ app.use(cors());
 app.use('/seeker',userRoutes)
 
 
-
-
-
-
-
-
-
 // Create a Socket.IO server attached to the HTTP server
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000', // Update with your React app's URL
+    origin: 'http://localhost:5173', // Update with your React app's URL
     methods: ['GET', 'POST'],
   },
 });
