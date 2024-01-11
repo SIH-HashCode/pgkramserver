@@ -1,5 +1,4 @@
-import Seeker from '../models/seeker.js'; 
-
+import Seeker from '../models/User.js'; 
 
 
 export const login = async (req, res) => {

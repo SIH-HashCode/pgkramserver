@@ -23,87 +23,60 @@ import http from 'http';
 import express from 'express';
 import cors from 'cors';
 import { Server } from 'socket.io';
-import IndianEmployer from './/models/user.js'
+import IndianEmployer from './models/IndianEmployer.js'
 import mongoose from 'mongoose';
 import userData from "./userData.js"; // Replace with the correct path to your userData file
 import JobsModel from './models/jobs.js'
-import SeekerModel from "./models/seeker.js";
+import SeekerModel from "./models/User.js";
 import userRoutes from './router/user.js'
 import { saveIndianEmployerData } from './contontrollers/dailyupdate.js';
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   
+mongoose.connect("mongodb+srv://sih202227:sih202227@cluster0.bjhqbah.mongodb.net/?retryWrites=true&w=majority",{useNewUrlParser: true, useUnifiedTopology: true})
 
 
+// import SeekerModel from "./models/User.js"; 
 
+// // // // // Function to generate a random number between min and max (inclusive)
+// const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+// mongoose.connection.on('error',err=>{
+//   console.log('connection failed');
+// });
 
-  
-// // mongoose.connect("mongodb+srv://sih202227:sih202227@cluster0.bjhqbah.mongodb.net/?retryWrites=true&w=majority",{useNewUrlParser: true, useUnifiedTopology: true})
-
-
-// // import SeekerModel from "./models/seeker.js"; 
-
-// // // // Function to generate a random number between min and max (inclusive)
-// // const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-// // mongoose.connection.on('error',err=>{
-// //   console.log('connection failed');
-// // });
-
-// // mongoose.connection.on('connected',()=>{
-// //   console.log('connected successfully with database');
-// // })
-// // // Function to generate random Seeker data
-// // const generateRandomSeeker = (i) => {
+// mongoose.connection.on('connected',()=>{
+//   console.log('connected successfully with database');
+// })
+// // Function to generate random Seeker data
+// const generateRandomSeeker = (i) => {
  
     
-// //   return {
-// //     name: `User${i + 1}`,
-// //     age: getRandomNumber(20, 35).toString(),
-// //     email: `user${i + 1}@example.com`,
-// //     state: "Punjab",
-// //     location: cities[getRandomNumber(0, cities.length - 1)],
-// //    sex: i % 2 === 0 ? "Male" : "Female",
-// //     education: educationLevels[getRandomNumber(0, educationLevels.length - 1)].value,
-// //     course: coursesArray[getRandomNumber(0, coursesArray.length - 1)],
+//   return {
+//     name: `User${i + 1}`,
+//     age: getRandomNumber(20, 35).toString(),
+//     email: `user${i + 1}@example.com`,
+//     state: "Punjab",
+//     location: cities[getRandomNumber(0, cities.length - 1)],
+//    sex: i % 2 === 0 ? "Male" : "Female",
+//     education: educationLevels[getRandomNumber(0, educationLevels.length - 1)].value,
+//     course: coursesArray[getRandomNumber(0, coursesArray.length - 1)],
     
-// //     maritialstatus: i % 2 === 0 ? "Single" : "Married",
-// //     skills: [
-// //       skillsArray[getRandomNumber(0, skillsArray.length - 1)],
-// //       skillsArray[getRandomNumber(0, skillsArray.length - 1)],
-// //       skillsArray[getRandomNumber(0, skillsArray.length - 1)],
-// //     ],
-// //     intrest: [
-// //       interestsArray[getRandomNumber(0, interestsArray.length - 1)],
-// //       interestsArray[getRandomNumber(0, interestsArray.length - 1)],
-// //       interestsArray[getRandomNumber(0, interestsArray.length - 1)],
-// //     ],
-// //     componenttime: [],
-// //     phoneno: "1234567890",
-// //     password: "password123",
-// //   };
-// // };
+//     maritialstatus: i % 2 === 0 ? "Single" : "Married",
+//     skills: [
+//       skillsArray[getRandomNumber(0, skillsArray.length - 1)],
+//       skillsArray[getRandomNumber(0, skillsArray.length - 1)],
+//       skillsArray[getRandomNumber(0, skillsArray.length - 1)],
+//     ],
+//     intrest: [
+//       interestsArray[getRandomNumber(0, interestsArray.length - 1)],
+//       interestsArray[getRandomNumber(0, interestsArray.length - 1)],
+//       interestsArray[getRandomNumber(0, interestsArray.length - 1)],
+//     ],
+//     componenttime: [],
+//     phoneno: "1234567890",
+//     password: "password123",
+//   };
+// };
 
 // // // Create 300 users
 // // (async () => {
@@ -129,13 +102,29 @@ import { saveIndianEmployerData } from './contontrollers/dailyupdate.js';
 
 
 
+const collectionName = 'users';
 
 
+const db = mongoose.connection;
 
+db.on('error', (error) => {
+  console.error('MongoDB connection error:', error);
+});
 
+db.once('open', async () => {
+  console.log('Connected to the database');
 
-
-
+  try {
+    // Clear the collection
+    const result = await mongoose.connection.db.collection(collectionName).deleteMany({});
+    console.log(`Deleted ${result.deletedCount} documents from the ${collectionName} collection`);
+  } catch (error) {
+    console.error('Error clearing collection:', error);
+  } finally {
+    mongoose.connection.close();
+    console.log('Connection closed');
+  }
+});
 
 
 

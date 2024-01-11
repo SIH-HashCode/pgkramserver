@@ -5,7 +5,6 @@ const userSchema = mongoose.Schema({
   phoneno: { type: String, required: true },
   state: { type: String, required: true },
   servicerange: { type: String, required: true },
-  agreetosharephoneno: { type: Boolean, required: true },
   education: { type: String, required: true },
   gender: { type: String, required: true },
   course: { type: String, required: true },

@@ -2,17 +2,11 @@ import http from 'http';
 import express from 'express';
 import cors from 'cors';
 import { Server } from 'socket.io';
-import IndianEmployer from './/models/user.js'
 import mongoose from 'mongoose';
-import userData from "./userData.js"; // Replace with the correct path to your userData file
-import JobsModel from './models/jobs.js'
-import SeekerModel from "./models/seeker.js";
 import userRoutes from './router/user.js'
 import loginRoutes from './router/login.js'
 import dashboardRoutes from './router/dashboard.js'
 import { saveIndianEmployerData } from './contontrollers/dailyupdate.js';
-import { createRandom } from './functions.js';
-import { getUsersByAgeCount, getUsersByCityWithTehsilCount, getUsersByCourseCount, getUsersByEducationCount, getUsersBySexCount } from './contontrollers/dashboard.js';
 const app = express();
 const server = http.createServer(app);
 mongoose.connect("mongodb+srv://sih202227:sih202227@cluster0.bjhqbah.mongodb.net/?retryWrites=true&w=majority",{useNewUrlParser: true, useUnifiedTopology: true})
@@ -128,6 +122,7 @@ const componentStats = {
 };
 
 const userActivity = {}; // Map to track which user is on which component
+const valueCounts ={} ;
 
 app.use(express.json());
 app.use(cors());
@@ -143,15 +138,15 @@ app.use('/dashboard',dashboardRoutes)
 // Create a Socket.IO server attached to the HTTP server
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173', // Update with your React app's URL
+    origin: ['http://localhost:5173', 'http://localhost:3000'],
     methods: ['GET', 'POST'],
   },
 });
 
-// Function to update the dashboard with user activity
+
 const updateDashboard = () => {
 
-
+  
   const nonloginuserLengths = Object.fromEntries(
     Object.entries(nonloginuser).map(([key, value]) => [key, value.length])
   );
@@ -167,13 +162,25 @@ const updateDashboard = () => {
     nonloginuser: nonloginuserLengths,
     loginuser:pageCountsLengths,
     deviceCounts: deviceCountsLengths,
+    componentStats:componentStats,
+    docRefrer: valueCounts
     // Add other array lengths as needed
   };
 console.log(dataToSend)
   io.emit('dashboard-update', dataToSend);
 };
 io.on('connection', (socket) => {
+updateDashboard()
+socket.on('user-advertisement', (data) => {
+  console.log(data);
 
+  // Assuming 'data' contains the value you want to count
+  const value = data; // Replace with the actual property name
+
+  // Update the count in the map
+  valueCounts[value] = (valueCounts[value] || 0) + 1;
+  console.log(valueCounts)
+})
   socket.on('track-device', (data) => {
     
     const { userId, device } = data;

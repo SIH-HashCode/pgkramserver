@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import components from '../models/components.js'
-import seeker from "../models/seeker.js";
+import seeker from "../models/User.js";
 
  export const saveIndianEmployerData = async (data) => {
     try {

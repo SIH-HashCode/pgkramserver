@@ -5,6 +5,7 @@ const userSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'IndianEmployer', 
       },
+  
   title: { type: String, required:  true },
   
   description: { type: String, required:  true },
@@ -44,5 +45,5 @@ const userSchema = mongoose.Schema({
   id: { type: String },
 
 });
-// {type:[String],default:[]}
+
 export default mongoose.model("Jobs", userSchema);
